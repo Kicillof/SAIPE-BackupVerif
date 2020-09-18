@@ -35,12 +35,12 @@
             this.button2 = new System.Windows.Forms.Button();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
             this.label1 = new System.Windows.Forms.Label();
-            this.archivosBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.archivosBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.archivosBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.archivosBindingSource1)).BeginInit();
@@ -92,10 +92,6 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "label1";
             // 
-            // archivosBindingSource1
-            // 
-            this.archivosBindingSource1.DataSource = typeof(SAIPE_BackupVerif.Archivos);
-            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.DataPropertyName = "Name";
@@ -130,6 +126,10 @@
             this.dataGridViewTextBoxColumn5.HeaderText = "LastModified";
             this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
             this.dataGridViewTextBoxColumn5.ReadOnly = true;
+            // 
+            // archivosBindingSource1
+            // 
+            this.archivosBindingSource1.DataSource = typeof(SAIPE_BackupVerif.Archivos);
             // 
             // Form1
             // 
