@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace SAIPE_BackupVerif
 {
@@ -25,6 +26,7 @@ namespace SAIPE_BackupVerif
             string[] dirs = Directory.GetDirectories(rootPath,"*",SearchOption.AllDirectories); //Lista de folders y subfolders
             string[] files; //Lista de archivos
             bool checkRoot = true;
+            var files_list = new List<Archivos>();
 
             foreach (string dir in dirs)
             {
@@ -52,7 +54,7 @@ namespace SAIPE_BackupVerif
                     var info = new FileInfo(file);
                     double size_kb = info.Length / 1024.0; //el .0 es necesario para mostrar los valores de MB con decimales
                     double size_mb = info.Length / 1024.0 / 1024.0;
-                    
+
                     Console.WriteLine("     " 
                         + Path.GetFileName(file) 
                         + " - " + String.Format("{0:0.00}", size_kb) + " KB" 
@@ -60,26 +62,23 @@ namespace SAIPE_BackupVerif
                         + " - " + info.LastWriteTime);
 
                     var file_new = new Archivos(Path.GetFileName(file), dirInf.Name, size_kb, size_mb, info.LastWriteTime);
+                    files_list.Add(file_new);
                 }
-                
-                //Console.WriteLine(dir);
-                //Debug.WriteLine(dir);
             }
 
-            //string[] files = Directory.GetFiles(rootPath,"*", SearchOption.AllDirectories); //Lista de archivos
+            dataGridView1.DataSource = files_list;
 
-            //foreach (string file in files)
-            //{
+            this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
+            this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
 
-            //    Console.WriteLine(Path.GetFileName(file));
-            //    //Console.WriteLine(file);
-            //    //Debug.WriteLine(file);
+            //dataGridView1.Sort(dataGridView1.Columns[1], ListSortDirection.Ascending);
 
-            //    //System.IO.FileInfo fi = new System.IO.FileInfo(file);
-            //    //Console.WriteLine("{0}: {1}, {2}", fi.Name, fi.Length, fi.CreationTime);
-            //}
+            dataGridView1.Refresh();
+            //dataGridView1.Update();
+
 
             Console.ReadLine();
         }
+
     }
 }
