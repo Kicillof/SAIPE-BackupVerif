@@ -20,34 +20,43 @@ namespace SAIPE_BackupVerif
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void button1_Click(object sender, EventArgs e)
         {
-            string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups
+            string rootPath = @"C:\Users\soportetecnico\Desktop\FILESYSTEM TEST"; //Folder de backups
             string[] dirs = Directory.GetDirectories(rootPath,"*",SearchOption.AllDirectories); //Lista de folders y subfolders
-            string[] files; //Lista de archivos
             bool checkRoot = true;
             var files_list = new List<Archivos>();
 
-            foreach (string dir in dirs)
+            //Relevo de archivos en root
+            RelevoArchivos(checkRoot, rootPath, dirs, files_list);
+
+            //Relevo de archivos en cada carpeta
+            checkRoot = false;
+            RelevoArchivos(checkRoot, rootPath, dirs, files_list);
+
+            files_list = files_list.OrderByDescending(x => x.LastModified).ToList(); //Ordena
+            
+            dataGridView1.DataSource = files_list;
+            
+            this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
+            this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
+
+            dataGridView1.Refresh();
+
+            Console.ReadLine();
+        }
+
+        private List<Archivos> RelevoArchivos(bool checkRoot, string rootPath, string[] dirs, List<Archivos> files_list)
+        {
+            string[] files; //Lista de archivos
+            DirectoryInfo dirInf = new DirectoryInfo(rootPath);
+
+            if (checkRoot)
             {
-                //Archivos en el root
-                if (checkRoot) //Verifica el root solo una vez (checkRoot)
-                {
-                    checkRoot = false;
-                    files = Directory.GetFiles(rootPath, "*", SearchOption.TopDirectoryOnly); //Lista de archivos en el root
-                    DirectoryInfo dirRoot = new DirectoryInfo(rootPath);
-                    Console.WriteLine(dirRoot.Name);
-
-                    foreach (string file in files)
-                    {
-                        Console.WriteLine("     " + Path.GetFileName(file));
-                    }
-                }
-
-                files = Directory.GetFiles(dir, "*", SearchOption.TopDirectoryOnly); //Lista de archivos en la carpeta actual
-
-                DirectoryInfo dirInf = new DirectoryInfo(dir);
-                Console.WriteLine(dirInf.Name);
+                checkRoot = false;
+                files = Directory.GetFiles(rootPath, "*", SearchOption.TopDirectoryOnly); //Lista de archivos en el root
+                DirectoryInfo dirRoot = new DirectoryInfo(rootPath);
+                //Console.WriteLine(dirRoot.Name);
 
                 foreach (string file in files)
                 {
@@ -55,30 +64,56 @@ namespace SAIPE_BackupVerif
                     double size_kb = info.Length / 1024.0; //el .0 es necesario para mostrar los valores de MB con decimales
                     double size_mb = info.Length / 1024.0 / 1024.0;
 
-                    Console.WriteLine("     " 
-                        + Path.GetFileName(file) 
-                        + " - " + String.Format("{0:0.00}", size_kb) + " KB" 
-                        + " - " + String.Format("{0:0.00}", size_mb) + " MB"
-                        + " - " + info.LastWriteTime);
+                    //Console.WriteLine("     "
+                    //    + Path.GetFileName(file)
+                    //    + " - " + String.Format("{0:0.00}", size_kb) + " KB"
+                    //    + " - " + String.Format("{0:0.00}", size_mb) + " MB"
+                    //    + " - " + info.LastWriteTime);
 
-                    var file_new = new Archivos(Path.GetFileName(file), dirInf.Name, size_kb, size_mb, info.LastWriteTime);
+                    var file_new = new Archivos(Path.GetFileName(file), dirRoot.Name, size_kb, size_mb, info.LastWriteTime);
                     files_list.Add(file_new);
                 }
             }
+            else
+            {
+                foreach (string dir in dirs)
+                {
+                    files = Directory.GetFiles(dir, "*", SearchOption.TopDirectoryOnly); //Lista de archivos en la carpeta actual
 
-            dataGridView1.DataSource = files_list;
+                    dirInf = new DirectoryInfo(dir);
+                    //Console.WriteLine(dirInf.Name);
 
-            this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
-            this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
+                    foreach (string file in files)
+                    {
+                        var info = new FileInfo(file);
+                        double size_kb = info.Length / 1024.0; //el .0 es necesario para mostrar los valores de MB con decimales
+                        double size_mb = info.Length / 1024.0 / 1024.0;
 
-            //dataGridView1.Sort(dataGridView1.Columns[1], ListSortDirection.Ascending);
+                        //Console.WriteLine("     "
+                        //    + Path.GetFileName(file)
+                        //    + " - " + String.Format("{0:0.00}", size_kb) + " KB"
+                        //    + " - " + String.Format("{0:0.00}", size_mb) + " MB"
+                        //    + " - " + info.LastWriteTime);
 
-            dataGridView1.Refresh();
-            //dataGridView1.Update();
-
-
-            Console.ReadLine();
+                        var file_new = new Archivos(Path.GetFileName(file), dirInf.Name, size_kb, size_mb, info.LastWriteTime);
+                        files_list.Add(file_new);
+                    }
+                }
+            }
+            return files_list;
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderb = new FolderBrowserDialog();
+            //DialogResult result = folderb.ShowDialog();
+            //string txtPath;
+
+            if (folderb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                label1.Text = folderb.SelectedPath;
+            }
+            
+        }
     }
 }
