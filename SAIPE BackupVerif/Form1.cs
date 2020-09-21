@@ -22,7 +22,8 @@ namespace SAIPE_BackupVerif
 
         public void button1_Click(object sender, EventArgs e)
         {
-            string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
+            string rootPath = label_directorio.Text.ToString();
+            //string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
             string[] dirs = Directory.GetDirectories(rootPath,"*",SearchOption.AllDirectories); //Lista de folders y subfolders
             bool checkRoot = true;
             var files_list = new List<Archivos>();
