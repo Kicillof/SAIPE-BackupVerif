@@ -22,7 +22,7 @@ namespace SAIPE_BackupVerif
 
         public void button1_Click(object sender, EventArgs e)
         {
-            string rootPath = @"C:\Users\soportetecnico\Desktop\FILESYSTEM TEST"; //Folder de backups
+            string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
             string[] dirs = Directory.GetDirectories(rootPath,"*",SearchOption.AllDirectories); //Lista de folders y subfolders
             bool checkRoot = true;
             var files_list = new List<Archivos>();
@@ -111,9 +111,14 @@ namespace SAIPE_BackupVerif
 
             if (folderb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                label1.Text = folderb.SelectedPath;
+                label_directorio.Text = folderb.SelectedPath;
             }
             
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
