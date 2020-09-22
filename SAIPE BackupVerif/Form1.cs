@@ -22,29 +22,37 @@ namespace SAIPE_BackupVerif
 
         public void button1_Click(object sender, EventArgs e)
         {
-            string rootPath = label_directorio.Text.ToString();
-            //string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
-            string[] dirs = Directory.GetDirectories(rootPath,"*",SearchOption.AllDirectories); //Lista de folders y subfolders
-            bool checkRoot = true;
-            var files_list = new List<Archivos>();
+            if (string.IsNullOrEmpty(label_directorio.Text)) //Verifica que se haya seleccionado un directorio
+            {
+                MessageBox.Show("Seleccionar un directorio para analizar", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                string rootPath = label_directorio.Text.ToString();
+                //string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
+                string[] dirs = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories); //Lista de folders y subfolders
+                bool checkRoot = true;
+                var files_list = new List<Archivos>();
 
-            //Relevo de archivos en root
-            RelevoArchivos(checkRoot, rootPath, dirs, files_list);
+                //Relevo de archivos en root
+                RelevoArchivos(checkRoot, rootPath, dirs, files_list);
 
-            //Relevo de archivos en cada carpeta
-            checkRoot = false;
-            RelevoArchivos(checkRoot, rootPath, dirs, files_list);
+                //Relevo de archivos en cada carpeta
+                checkRoot = false;
+                RelevoArchivos(checkRoot, rootPath, dirs, files_list);
 
-            files_list = files_list.OrderByDescending(x => x.LastModified).ToList(); //Ordena
-            
-            dataGridView1.DataSource = files_list;
-            
-            this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
-            this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
+                files_list = files_list.OrderByDescending(x => x.LastModified).ToList(); //Ordena
 
-            dataGridView1.Refresh();
+                dataGridView1.DataSource = files_list;
 
-            Console.ReadLine();
+                //Establece el formato de los tamaños en KB Y mb
+                this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
+                this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
+
+                dataGridView1.Refresh();
+
+                Console.ReadLine();
+            }
         }
 
         private List<Archivos> RelevoArchivos(bool checkRoot, string rootPath, string[] dirs, List<Archivos> files_list)
@@ -118,6 +126,19 @@ namespace SAIPE_BackupVerif
         }
 
         private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            if (dateTimePicker1.Value > dateTimePicker2.Value)
+            {
+                MessageBox.Show("La segunda fecha no puede ser mayor a la primera", "", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+            }
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
 
         }
