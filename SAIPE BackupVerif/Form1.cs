@@ -26,7 +26,7 @@ namespace SAIPE_BackupVerif
             {
                 MessageBox.Show("Seleccionar un directorio para analizar", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
+            else //Procede normalmente
             {
                 string rootPath = label_directorio.Text.ToString();
                 //string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
@@ -41,18 +41,56 @@ namespace SAIPE_BackupVerif
                 checkRoot = false;
                 RelevoArchivos(checkRoot, rootPath, dirs, files_list);
 
-                files_list = files_list.OrderByDescending(x => x.LastModified).ToList(); //Ordena
+                //Identifica el checkbox en true
+                byte id_checkbox = 0;
+                if (checkBox1.Checked == true) { id_checkbox = 1; };
+                if (checkBox2.Checked == true) { id_checkbox = 2; };
+                if (checkBox3.Checked == true) { id_checkbox = 3; };
+                if (checkBox4.Checked == true) { id_checkbox = 4; }; 
 
+                //Ordenar
+                switch (id_checkbox)
+                {
+                    case 1:
+                        if (checkBox5.Checked) //si es ascendente
+                            files_list = files_list.OrderByDescending(x => x.Folder).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderBy(x => x.Folder).ToList();
+                        break;
+                    case 2:
+                        if (checkBox5.Checked) //si es ascendente
+                            files_list = files_list.OrderByDescending(x => x.Name).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderBy(x => x.Name).ToList();
+                        break; 
+                    case 3:
+                        if (checkBox5.Checked) //si es ascendente
+                            files_list = files_list.OrderByDescending(x => x.SizeMB).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderBy(x => x.SizeMB).ToList();
+                        break;
+                    case 4:
+                        if (checkBox5.Checked) //si es ascendente
+                            files_list = files_list.OrderByDescending(x => x.LastModified).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderBy(x => x.LastModified).ToList();
+                        break;
+                    default:
+                        break;
+                }
+
+                //Asigna la lista para armar el grid
                 dataGridView1.DataSource = files_list;
 
                 //Establece el formato de los tamaños en KB Y mb
                 this.dataGridView1.Columns[2].DefaultCellStyle.Format = "0.00#";
                 this.dataGridView1.Columns[3].DefaultCellStyle.Format = "0.00#";
 
-                dataGridView1.Refresh();
+                ConstatarFechasGrid(dateTimePicker1.Value.Date, dateTimePicker2.Value.Date);
 
-                Console.ReadLine();
+                dataGridView1.Refresh();
             }
+            
         }
 
         private List<Archivos> RelevoArchivos(bool checkRoot, string rootPath, string[] dirs, List<Archivos> files_list)
@@ -115,32 +153,101 @@ namespace SAIPE_BackupVerif
         private void button2_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderb = new FolderBrowserDialog();
-            //DialogResult result = folderb.ShowDialog();
-            //string txtPath;
 
             if (folderb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                label_directorio.Text = folderb.SelectedPath;
+                label_directorio.Text = folderb.SelectedPath; //Coloca en el label el directorio seleccionado
             }
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            dateTimePicker1.Value = new DateTime(2010, 01, 01); //Establece las fechas predeterminadas
+            dateTimePicker2.Value = DateTime.Today;
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
         {
-            if (dateTimePicker1.Value > dateTimePicker2.Value)
+            DateTime dtFecha1 = dateTimePicker1.Value.Date; //Obtiene el componente fecha del DateTime
+            DateTime dtFecha2 = dateTimePicker2.Value.Date;
+
+            if (dtFecha2 < dtFecha1) //Verifica que las fechas sean correctas
             {
-                MessageBox.Show("La segunda fecha no puede ser mayor a la primera", "", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show("La segunda fecha no puede ser menor a la primera", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dateTimePicker2.Value = DateTime.Now;
             }
         }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
+            DateTime dtFecha1 = dateTimePicker1.Value.Date; //Obtiene el componente fecha del DateTime
+            DateTime dtFecha2 = dateTimePicker2.Value.Date;
 
+            if (dtFecha2 < dtFecha1) //Verifica que las fechas sean correctas
+            {
+                MessageBox.Show("La segunda fecha no puede ser menor a la primera", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dateTimePicker1.Value = DateTime.Now;
+            }
+        }
+
+        private void ConstatarFechasGrid(DateTime dtFecha1, DateTime dtFecha2)
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                if (Convert.ToDateTime(row.Cells[4].Value) < dtFecha1 || Convert.ToDateTime(row.Cells[4].Value) > dtFecha2)
+                {
+                    row.DefaultCellStyle.ForeColor = Color.Red; //Asigna rojo a las filas que no hacen match con las fechas
+                }
+            }
+        }
+
+        private void ConstatarCheckboxes1() //Verifica los checkbox usados para ordenar
+        {
+            byte cantidad_checkbox = 0;
+            if (checkBox1.Checked == true) { cantidad_checkbox++; };
+            if (checkBox2.Checked == true) { cantidad_checkbox++; };
+            if (checkBox3.Checked == true) { cantidad_checkbox++; };
+            if (checkBox4.Checked == true) { cantidad_checkbox++; }; //Controla la cantidad de checkboxes en true
+            if (cantidad_checkbox > 1)
+            {
+                MessageBox.Show("Seleccionar un solo parametro para ordenar la grilla.", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                button1.Enabled = false;
+            }
+            else
+            {
+                button1.Enabled = true;
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            ConstatarCheckboxes1();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            ConstatarCheckboxes1();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            ConstatarCheckboxes1();
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            ConstatarCheckboxes1();
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBox6.Checked = !checkBox5.Checked;
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBox5.Checked = !checkBox6.Checked;
         }
     }
 }
