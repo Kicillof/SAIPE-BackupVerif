@@ -53,27 +53,27 @@ namespace SAIPE_BackupVerif
                 {
                     case 1:
                         if (checkBox5.Checked) //si es ascendente
-                            files_list = files_list.OrderByDescending(x => x.Folder).ToList();
-                        else //si es descendente
                             files_list = files_list.OrderBy(x => x.Folder).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderByDescending(x => x.Folder).ToList();
                         break;
                     case 2:
                         if (checkBox5.Checked) //si es ascendente
-                            files_list = files_list.OrderByDescending(x => x.Name).ToList();
-                        else //si es descendente
                             files_list = files_list.OrderBy(x => x.Name).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderByDescending(x => x.Name).ToList();
                         break; 
                     case 3:
                         if (checkBox5.Checked) //si es ascendente
-                            files_list = files_list.OrderByDescending(x => x.SizeMB).ToList();
-                        else //si es descendente
                             files_list = files_list.OrderBy(x => x.SizeMB).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderByDescending(x => x.SizeMB).ToList();
                         break;
                     case 4:
                         if (checkBox5.Checked) //si es ascendente
-                            files_list = files_list.OrderByDescending(x => x.LastModified).ToList();
-                        else //si es descendente
                             files_list = files_list.OrderBy(x => x.LastModified).ToList();
+                        else //si es descendente
+                            files_list = files_list.OrderByDescending(x => x.LastModified).ToList();
                         break;
                     default:
                         break;
@@ -165,6 +165,7 @@ namespace SAIPE_BackupVerif
         {
             dateTimePicker1.Value = new DateTime(2010, 01, 01); //Establece las fechas predeterminadas
             dateTimePicker2.Value = DateTime.Today;
+            checkBox5.Checked = true;
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
