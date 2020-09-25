@@ -13,14 +13,17 @@ namespace SAIPE_BackupVerif
         public double SizeKB { get; set; }
         public double SizeMB { get; set; }
         public DateTime LastModified { get; set; }
+        public string FullPath { get; set; }
 
-        public Archivos(string name, string folder, double sizeKB, double sizeMB, DateTime lastModified)
+
+        public Archivos(string name, string folder, double sizeKB, double sizeMB, DateTime lastModified, string fullPath)
         {
             Name = name;
             Folder = folder;
             SizeKB = sizeKB;
             SizeMB = sizeMB;
             LastModified = lastModified;
+            FullPath = fullPath;
         }
 
     }

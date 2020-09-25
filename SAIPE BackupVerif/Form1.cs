@@ -22,13 +22,13 @@ namespace SAIPE_BackupVerif
 
         public void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(label_directorio.Text)) //Verifica que se haya seleccionado un directorio
+            if (string.IsNullOrEmpty(textBox_directorio.Text)) //Verifica que se haya seleccionado un directorio
             {
                 MessageBox.Show("Seleccionar un directorio para analizar", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else //Procede normalmente
             {
-                string rootPath = label_directorio.Text.ToString();
+                string rootPath = textBox_directorio.Text.ToString();
                 //string rootPath = @"G:\GitHub Repos\FILESYSTEM TEST"; //Folder de backups C:\Users\soportetecnico\Desktop\FILESYSTEM TEST
                 string[] dirs = Directory.GetDirectories(rootPath, "*", SearchOption.AllDirectories); //Lista de folders y subfolders
                 bool checkRoot = true;
@@ -117,7 +117,7 @@ namespace SAIPE_BackupVerif
                     //    + " - " + String.Format("{0:0.00}", size_mb) + " MB"
                     //    + " - " + info.LastWriteTime);
 
-                    var file_new = new Archivos(Path.GetFileName(file), dirRoot.Name, size_kb, size_mb, info.LastWriteTime);
+                    var file_new = new Archivos(Path.GetFileName(file), dirRoot.Name, size_kb, size_mb, info.LastWriteTime, dirRoot.FullName);
                     files_list.Add(file_new);
                 }
             }
@@ -142,7 +142,7 @@ namespace SAIPE_BackupVerif
                         //    + " - " + String.Format("{0:0.00}", size_mb) + " MB"
                         //    + " - " + info.LastWriteTime);
 
-                        var file_new = new Archivos(Path.GetFileName(file), dirInf.Name, size_kb, size_mb, info.LastWriteTime);
+                        var file_new = new Archivos(Path.GetFileName(file), dirInf.Name, size_kb, size_mb, info.LastWriteTime, dirInf.FullName);
                         files_list.Add(file_new);
                     }
                 }
@@ -156,7 +156,7 @@ namespace SAIPE_BackupVerif
 
             if (folderb.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                label_directorio.Text = folderb.SelectedPath; //Coloca en el label el directorio seleccionado
+                textBox_directorio.Text = folderb.SelectedPath; //Coloca en el label el directorio seleccionado
             }
 
         }
